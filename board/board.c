@@ -25,13 +25,8 @@
 
 #include "board.h"
 
-#if defined(__MSP430__)
-  #define sys_write   write
-  #define sys_read    read
-#else
-  #define sys_write   _write
-  #define sys_read    _read
-#endif
+#define sys_write   _write
+#define sys_read    _read
 
 //--------------------------------------------------------------------+
 // newlib read()/write() retarget

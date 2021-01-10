@@ -28,6 +28,7 @@
 #include <string.h>
 
 #include "board.h"
+#include "neopixel.h"
 
 //--------------------------------------------------------------------+
 // MACRO CONSTANT TYPEDEF PROTYPES
@@ -47,9 +48,15 @@ enum  {
 int main(void)
 {
   board_init();
+  neopixel_init();
 
   uint32_t start_ms = 0;
-  bool led_state = false;
+  uint32_t pallet[8] = {
+    0x000000, 0x000010, 0x001000, 0x100000,
+    0x001010, 0x100010, 0x101000, 0x101010
+  };
+  uint32_t count = 0;
+
 
   while (1)
   {
@@ -66,8 +73,11 @@ int main(void)
 
       start_ms = board_millis();
 
-      board_led_write(led_state);
-      led_state = 1 - led_state; // toggle
+      board_led_write(count & 0x1);
+      neopixel_setPixel(0, pallet[(count & 0x7U)]);
+      neopixel_setPixel(1, pallet[((~count) & 0x7U)]);
+      neopixel_refresh();
+      count += 0x1;
     }
   }
 

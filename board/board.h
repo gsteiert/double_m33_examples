@@ -44,6 +44,42 @@
 #define CFG_BOARD_UART_BAUDRATE    115200
 
 //--------------------------------------------------------------------+
+// MACRO TYPEDEF CONSTANT ENUM
+//--------------------------------------------------------------------+
+#define LED_PORT              0
+#define LED_PIN               1
+#define LED_STATE_ON          1
+
+// WAKE button
+#define BUTTON_PORT           0
+#define BUTTON_PIN            5
+#define BUTTON_STATE_ACTIVE   0
+
+// Number of neopixels
+#define NEOPIXEL_NUMBER       2
+#define NEOPIXEL_PORT         0
+#define NEOPIXEL_PIN          27
+
+// UART
+#define UART_DEV              USART0
+
+// IOCON pin mux
+#define IOCON_PIO_DIGITAL_EN 0x0100u  /*!<@brief Enables digital function */
+#define IOCON_PIO_FUNC0 0x00u         /*!<@brief Selects pin function 0 */
+#define IOCON_PIO_FUNC1 0x01u         /*!<@brief Selects pin function 1 */
+#define IOCON_PIO_FUNC4 0x04u         /*!<@brief Selects pin function 4 */
+#define IOCON_PIO_FUNC7 0x07u         /*!<@brief Selects pin function 7 */
+#define IOCON_PIO_INV_DI 0x00u        /*!<@brief Input function is not inverted */
+#define IOCON_PIO_MODE_INACT 0x00u    /*!<@brief No addition pin function */
+#define IOCON_PIO_OPENDRAIN_DI 0x00u  /*!<@brief Open drain is disabled */
+#define IOCON_PIO_SLEW_STANDARD 0x00u /*!<@brief Standard mode, output slew rate control is enabled */
+
+#define IOCON_PIO_DIG_FUNC0_EN   (IOCON_PIO_DIGITAL_EN | IOCON_PIO_FUNC0) /*!<@brief Digital pin function 0 enabled */
+#define IOCON_PIO_DIG_FUNC1_EN   (IOCON_PIO_DIGITAL_EN | IOCON_PIO_FUNC1) /*!<@brief Digital pin function 1 enabled */
+#define IOCON_PIO_DIG_FUNC4_EN   (IOCON_PIO_DIGITAL_EN | IOCON_PIO_FUNC4) /*!<@brief Digital pin function 2 enabled */
+#define IOCON_PIO_DIG_FUNC7_EN   (IOCON_PIO_DIGITAL_EN | IOCON_PIO_FUNC7) /*!<@brief Digital pin function 2 enabled */
+
+//--------------------------------------------------------------------+
 // Board Porting API
 // For simplicity, only one LED and one Button are used
 //--------------------------------------------------------------------+
@@ -53,7 +89,10 @@ void board_init(void);
 
 // Turn LED on or off
 void board_led_write(bool state);
-
+/*
+void neopixel_set(uint32_t pixel, uint32_t color);
+void neopixel_update(void);
+*/
 // Get the current state of button
 // a '1' means active (pressed), a '0' means inactive.
 uint32_t board_button_read(void);
