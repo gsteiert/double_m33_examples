@@ -7,3 +7,6 @@
 [submodule "uf2"]
 	path = uf2
 	url = https://github.com/microsoft/uf2
+[submodule "sct_neopixel"]
+	path = sct_neopixel
+	url = https://github.com/gsteiert/sct_neopixel

@@ -28,7 +28,7 @@
 #include <string.h>
 
 #include "board.h"
-#include "neopixel.h"
+
 
 //--------------------------------------------------------------------+
 // MACRO CONSTANT TYPEDEF PROTYPES
@@ -48,36 +48,16 @@ enum  {
 int main(void)
 {
   uint32_t pixelData[NEOPIXEL_NUMBER];
-  neopixel_config_t neoConfig;
+//  neopixel_config_t neoConfig;
   board_init();
-  neoConfig.pixelData[0] = NULL; 
-  neoConfig.pixelCnt[0] = 0;
-  neoConfig.pixelData[1] = NULL; 
-  neoConfig.pixelCnt[1] = 0;
-  neoConfig.pixelData[2] = NULL; 
-  neoConfig.pixelCnt[2] = 0;
-  neoConfig.pixelData[3] = NULL; 
-  neoConfig.pixelCnt[3] = 0;
-  neoConfig.pixelData[4] = NULL; 
-  neoConfig.pixelCnt[4] = 0;
-  neoConfig.pixelData[5] = NULL; 
-  neoConfig.pixelCnt[5] = 0;
-  neoConfig.pixelData[6] = NULL; 
-  neoConfig.pixelCnt[6] = 0;
-  neoConfig.pixelData[7] = NULL; 
-  neoConfig.pixelCnt[7] = 0;
-  neoConfig.pixelData[8] = NULL; 
-  neoConfig.pixelCnt[8] = 0;
-  neoConfig.pixelData[9] = NULL; 
-  neoConfig.pixelCnt[9] = 0;
-  neoConfig.pixelData[NEOPIXEL_CH] = pixelData; 
-  neoConfig.pixelCnt[NEOPIXEL_CH] = NEOPIXEL_NUMBER;
-  neopixel_init(&neoConfig);
+  sctpix_init(NEOPIXEL_TYPE);
+  sctpix_addCh(NEOPIXEL_CH, pixelData, NEOPIXEL_NUMBER);
+
 
   uint32_t start_ms = 0;
   uint32_t pallet[8] = {
     0x000000, 0x000010, 0x001000, 0x100000,
-    0x001010, 0x100010, 0x101000, 0x101010
+    0x101010, 0x101000, 0x100010, 0x001010
   };
   uint32_t count = 0;
 
@@ -98,9 +78,9 @@ int main(void)
       start_ms = board_millis();
 
       board_led_write(count & 0x1);
-      neopixel_setPixel(NEOPIXEL_CH, 0, pallet[(count & 0x7U)]);
-      neopixel_setPixel(NEOPIXEL_CH, 1, pallet[((~count) & 0x7U)]);
-      neopixel_refresh();
+      sctpix_setPixel(NEOPIXEL_CH, 0, pallet[(count & 0x7U)]);
+      sctpix_setPixel(NEOPIXEL_CH, 1, pallet[((count +4) & 0x7U)]);
+      sctpix_show();
       count += 0x1;
     }
   }

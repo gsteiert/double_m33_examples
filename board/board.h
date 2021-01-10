@@ -38,6 +38,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "sct_neopixel.h"
 #include "ansi_escape.h"
 #include "tusb.h"
 
@@ -60,6 +61,7 @@
 #define NEOPIXEL_PORT         0
 #define NEOPIXEL_PIN          27
 #define NEOPIXEL_CH           6
+#define NEOPIXEL_TYPE         0   /* TBD */
 
 // UART
 #define UART_DEV              USART0

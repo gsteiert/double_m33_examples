@@ -25,12 +25,14 @@ SRC_C += \
 	$(MCU_DIR)/drivers/fsl_power.c \
 	$(MCU_DIR)/drivers/fsl_reset.c \
 	$(MCU_DIR)/drivers/fsl_usart.c \
-	$(MCU_DIR)/drivers/fsl_flexcomm.c 
+	$(MCU_DIR)/drivers/fsl_flexcomm.c \
+	$(TOP)/sct_neopixel/sct_neopixel.c
 
 INC += \
 	$(MCU_DIR)/../../CMSIS/Include \
 	$(MCU_DIR) \
-	$(MCU_DIR)/drivers
+	$(MCU_DIR)/drivers \
+	$(TOP)/sct_neopixel
 
 SRC_S += $(MCU_DIR)/gcc/startup_LPC55S69_cm33_core0.S
 
