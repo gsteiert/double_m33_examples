@@ -47,8 +47,13 @@ enum  {
 
 int main(void)
 {
+  uint32_t pixelData[NEOPIXEL_NUMBER];
+  neopixel_config_t neoConfig;
   board_init();
-  neopixel_init();
+  neoConfig.pixelData[NEOPIXEL_CH] = pixelData;
+  neoConfig.pixelCnt[NEOPIXEL_CH] = NEOPIXEL_NUMBER;
+  neoConfig.syncUpdate = true;
+  neopixel_init(&neoConfig);
 
   uint32_t start_ms = 0;
   uint32_t pallet[8] = {
@@ -74,8 +79,8 @@ int main(void)
       start_ms = board_millis();
 
       board_led_write(count & 0x1);
-      neopixel_setPixel(0, pallet[(count & 0x7U)]);
-      neopixel_setPixel(1, pallet[((~count) & 0x7U)]);
+      neopixel_setPixel(NEOPIXEL_CH, 0, pallet[(count & 0x7U)]);
+      neopixel_setPixel(NEOPIXEL_CH, 1, pallet[((~count) & 0x7U)]);
       neopixel_refresh();
       count += 0x1;
     }

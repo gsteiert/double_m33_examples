@@ -59,6 +59,7 @@
 #define NEOPIXEL_NUMBER       2
 #define NEOPIXEL_PORT         0
 #define NEOPIXEL_PIN          27
+#define NEOPIXEL_CH           6
 
 // UART
 #define UART_DEV              USART0

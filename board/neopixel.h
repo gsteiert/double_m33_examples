@@ -31,11 +31,18 @@
 #endif
 
 #include <stdint.h>
+#include <stdbool.h>
 
+typedef struct _neopixel_config {
+  uint32_t *pixelData[10];
+  uint32_t  pixelCnt[10];
+  uint32_t  pixelType;
+  bool      syncUpdate;
+} neopixel_config_t; 
 
-void neopixel_init(void);
+void neopixel_init(neopixel_config_t *config);
 void neopixel_refresh(void);
-void neopixel_setPixel(uint32_t pixel, uint32_t color);
+void neopixel_setPixel(uint32_t ch, uint32_t pixel, uint32_t color);
 
 
 
