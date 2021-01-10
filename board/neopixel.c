@@ -61,12 +61,10 @@
 #define NEO_COUNT_RESET   8120
 #define NEO_FIRST_BIT     23
 
-
-//volatile uint32_t _neopixel_array[NEOPIXEL_NUMBER] = {0x404040, 0x202020};
 neopixel_config_t *neo;
+uint32_t          _neopixel_max_count = 0;
 volatile uint32_t _neopixel_count = 0;
 volatile bool     _neopixel_busy = false;
-//volatile bool     _neopixel_sync = true;
 
 void neopixel_int_handler(void){
   uint32_t eventFlag = NEO_SCT->EVFLAG;
@@ -74,7 +72,7 @@ void neopixel_int_handler(void){
     _neopixel_busy = false;
   } else if (eventFlag & (1 << NEO_EVENT_LAST)) {
     _neopixel_count += 1;
-    if (_neopixel_count < (NEOPIXEL_NUMBER)) {
+    if (_neopixel_count < _neopixel_max_count) {
       NEO_SCT->STATE = NEO_FIRST_BIT; 
       if (_neopixel_count < neo->pixelCnt[0]) {
         NEO_SCT->EV[NEO_EVENT_CH_0].STATE = (~neo->pixelData[0][_neopixel_count]); }
@@ -111,13 +109,12 @@ void SCT0_DriverIRQHandler(void){
 
 void neopixel_setPixel(uint32_t ch, uint32_t pixel, uint32_t color){
   if (ch < 10) {
-    
-  if (pixel < neo->pixelCnt[ch]) { 
-    if (neo->syncUpdate) {
-      while (_neopixel_busy) {__NOP();}
+    if (pixel < neo->pixelCnt[ch]) {
+      if (neo->syncUpdate) {
+        while (_neopixel_busy) { __NOP(); }
+      }
+      neo->pixelData[ch][pixel] = color;
     }
-    neo->pixelData[ch][pixel] = color;
-  }
   }
 }
 
@@ -145,6 +142,13 @@ void neopixel_init(neopixel_config_t *config) {
   CLOCK_EnableClock(kCLOCK_Sct0);
   RESET_PeripheralReset(kSCT0_RST_SHIFT_RSTn);
 
+  _neopixel_max_count = 0;
+  for (uint32_t i=0; i < 10; i++) {
+    if (_neopixel_max_count < neo->pixelCnt[i]) { 
+      _neopixel_max_count = neo->pixelCnt[i]; 
+    }
+  }
+
   NEO_SCT->CONFIG = (
     SCT_CONFIG_UNIFY(1) | 
     SCT_CONFIG_CLKMODE(kSCTIMER_System_ClockMode) | 
@@ -161,34 +165,34 @@ void neopixel_init(neopixel_config_t *config) {
   NEO_SCT->EV[NEO_EVENT_RISE].STATE = 0xFFFFFFFF;
   NEO_SCT->EV[NEO_EVENT_RISE].CTRL = (
     kSCTIMER_MatchEventOnly | SCT_EV_CTRL_MATCHSEL(NEO_MATCH_RISE) );
-  NEO_SCT->EV[NEO_EVENT_CH_0].STATE = 0x0;
+  NEO_SCT->EV[NEO_EVENT_CH_0].STATE = 0xF0F0F0F0;
   NEO_SCT->EV[NEO_EVENT_CH_0].CTRL = (
     kSCTIMER_MatchEventOnly | SCT_EV_CTRL_MATCHSEL(NEO_MATCH_0) );
-  NEO_SCT->EV[NEO_EVENT_CH_1].STATE = 0x0;
+  NEO_SCT->EV[NEO_EVENT_CH_1].STATE = 0xF0F0F0F0;
   NEO_SCT->EV[NEO_EVENT_CH_1].CTRL = (
     kSCTIMER_MatchEventOnly | SCT_EV_CTRL_MATCHSEL(NEO_MATCH_0) );
-  NEO_SCT->EV[NEO_EVENT_CH_2].STATE = 0x0;
+  NEO_SCT->EV[NEO_EVENT_CH_2].STATE = 0xF0F0F0F0;
   NEO_SCT->EV[NEO_EVENT_CH_2].CTRL = (
     kSCTIMER_MatchEventOnly | SCT_EV_CTRL_MATCHSEL(NEO_MATCH_0) );
-  NEO_SCT->EV[NEO_EVENT_CH_3].STATE = 0x0;
+  NEO_SCT->EV[NEO_EVENT_CH_3].STATE = 0xF0F0F0F0;
   NEO_SCT->EV[NEO_EVENT_CH_3].CTRL = (
     kSCTIMER_MatchEventOnly | SCT_EV_CTRL_MATCHSEL(NEO_MATCH_0) );
-  NEO_SCT->EV[NEO_EVENT_CH_4].STATE = 0x0;
+  NEO_SCT->EV[NEO_EVENT_CH_4].STATE = 0xF0F0F0F0;
   NEO_SCT->EV[NEO_EVENT_CH_4].CTRL = (
     kSCTIMER_MatchEventOnly | SCT_EV_CTRL_MATCHSEL(NEO_MATCH_0) );
-  NEO_SCT->EV[NEO_EVENT_CH_5].STATE = 0x0;
+  NEO_SCT->EV[NEO_EVENT_CH_5].STATE = 0xF0F0F0F0;
   NEO_SCT->EV[NEO_EVENT_CH_5].CTRL = (
     kSCTIMER_MatchEventOnly | SCT_EV_CTRL_MATCHSEL(NEO_MATCH_0) );
-  NEO_SCT->EV[NEO_EVENT_CH_6].STATE = 0x0;
+  NEO_SCT->EV[NEO_EVENT_CH_6].STATE = 0xF0F0F0F0;
   NEO_SCT->EV[NEO_EVENT_CH_6].CTRL = (
     kSCTIMER_MatchEventOnly | SCT_EV_CTRL_MATCHSEL(NEO_MATCH_0) );
-  NEO_SCT->EV[NEO_EVENT_CH_7].STATE = 0x0;
+  NEO_SCT->EV[NEO_EVENT_CH_7].STATE = 0xF0F0F0F0;
   NEO_SCT->EV[NEO_EVENT_CH_7].CTRL = (
     kSCTIMER_MatchEventOnly | SCT_EV_CTRL_MATCHSEL(NEO_MATCH_0) );
-  NEO_SCT->EV[NEO_EVENT_CH_8].STATE = 0x0;
+  NEO_SCT->EV[NEO_EVENT_CH_8].STATE = 0xF0F0F0F0;
   NEO_SCT->EV[NEO_EVENT_CH_8].CTRL = (
     kSCTIMER_MatchEventOnly | SCT_EV_CTRL_MATCHSEL(NEO_MATCH_0) );
-  NEO_SCT->EV[NEO_EVENT_CH_9].STATE = 0x0;
+  NEO_SCT->EV[NEO_EVENT_CH_9].STATE = 0xF0F0F0F0;
   NEO_SCT->EV[NEO_EVENT_CH_9].CTRL = (
     kSCTIMER_MatchEventOnly | SCT_EV_CTRL_MATCHSEL(NEO_MATCH_0) );
   NEO_SCT->EV[NEO_EVENT_FALL_1].STATE = 0xFFFFFFFF;
