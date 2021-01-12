@@ -118,6 +118,12 @@ void board_init(void)
   gpio_pin_config_t const button_config = { kGPIO_DigitalInput, 0};
   GPIO_PinInit(GPIO, BUTTON_PORT, BUTTON_PIN, &button_config);
 
+  // I2C
+  /* I2C SCL */
+  IOCON_PinMuxSet(IOCON, I2C_SCL_PORT, I2C_SCL_PIN, (IOCON_PIO_DIG_FUNC1_EN | IOCON_PIO_I2CFILTER_MASK));
+  /* I2C SDA */
+  IOCON_PinMuxSet(IOCON, I2C_SDA_PORT, I2C_SDA_PIN, (IOCON_PIO_DIG_FUNC1_EN | IOCON_PIO_I2CFILTER_MASK));
+
   // UART
   /* PORT0 PIN29 (coords: 92) is configured as FC0_RXD_SDA_MOSI_DATA */
   IOCON_PinMuxSet(IOCON, 0U, 29U, IOCON_PIO_DIG_FUNC1_EN);

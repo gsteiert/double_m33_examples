@@ -63,6 +63,12 @@
 #define NEOPIXEL_CH           6
 #define NEOPIXEL_TYPE         0   /* TBD */
 
+// I2C
+#define I2C_SCL_PORT          0
+#define I2C_SCL_PIN           14
+#define I2C_SDA_PORT          0
+#define I2C_SDA_PIN           13
+
 // UART
 #define UART_DEV              USART0
 

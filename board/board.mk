@@ -21,6 +21,7 @@ LD_FILE = board/LPC55S69_cm33_core0_uf2.ld
 SRC_C += \
 	$(MCU_DIR)/system_LPC55S69_cm33_core0.c \
 	$(MCU_DIR)/drivers/fsl_clock.c \
+	$(MCU_DIR)/drivers/fsl_i2c.c \
 	$(MCU_DIR)/drivers/fsl_gpio.c \
 	$(MCU_DIR)/drivers/fsl_power.c \
 	$(MCU_DIR)/drivers/fsl_reset.c \
