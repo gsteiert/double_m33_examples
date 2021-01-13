@@ -31,6 +31,12 @@
 #include "fsl_iocon.h"
 #include "fsl_sctimer.h"
 
+
+//--------------------------------------------------------------------+
+// Buffer for on board NeoPixels
+//--------------------------------------------------------------------+
+uint32_t pixelData[NEOPIXEL_NUMBER];
+
 //--------------------------------------------------------------------+
 // Forward USB interrupt events to TinyUSB IRQ Handler
 //--------------------------------------------------------------------+
@@ -81,6 +87,7 @@ void BootClockFROHF96M(void)
 
 void board_init(void)
 {
+  uint8_t i2cBuff[4];
   // Enable IOCON clock
   CLOCK_EnableClock(kCLOCK_Iocon);
 
@@ -181,6 +188,29 @@ void board_init(void)
   CLOCK_DisableClock(kCLOCK_Usbhsl0);
   CLOCK_EnableUsbfs0DeviceClock(kCLOCK_UsbfsSrcFro, CLOCK_GetFreq(kCLOCK_FroHf)); /* enable USB Device clock */
 #endif
+
+  sctpix_init(NEOPIXEL_TYPE);
+  sctpix_addCh(NEOPIXEL_CH, pixelData, NEOPIXEL_NUMBER);
+
+  /* attach 12 MHz clock to FLEXCOMM1 (I2C master) */
+  CLOCK_AttachClk(kFRO12M_to_FLEXCOMM1);
+
+  /* reset FLEXCOMM for I2C */
+  RESET_PeripheralReset(kFC1_RST_SHIFT_RSTn);
+
+  siic_init(I2C1_BASE, 400000);
+
+  i2cBuff[0] = 0x02;  // Charge Current Limit Register
+  i2cBuff[1] = 0x85;  // 100mA (fairly safe)
+  siic_write(BQ25619_ADDR, i2cBuff, 2);
+
+  i2cBuff[0] = 0x03;  // Precharge & Termination
+  i2cBuff[1] = 0x11;  // Pre 20mA, Term 20mA
+  siic_write(BQ25619_ADDR, i2cBuff, 2);
+
+  i2cBuff[0] = 0x00;  // Input Current Limit Register
+  i2cBuff[1] = 0x4F;  // TS_IGNORE & 1500mA
+  siic_write(BQ25619_ADDR, i2cBuff, 2);
 
 }
 

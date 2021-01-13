@@ -38,6 +38,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "fsl_device_registers.h"
+#include "fsl_common.h"
+#include "simple_i2c.h"
 #include "sct_neopixel.h"
 #include "ansi_escape.h"
 #include "tusb.h"
@@ -63,11 +66,23 @@
 #define NEOPIXEL_CH           6
 #define NEOPIXEL_TYPE         0   /* TBD */
 
+#define NEO_RED     0x001000
+#define NEO_GREEN   0x100000
+#define NEO_BLUE    0x000010
+#define NEO_YELLOW  0x101000
+#define NEO_CYAN    0x100010
+#define NEO_MAGENTA 0x001010
+#define NEO_WHITE   0x101010
+#define NEO_OFF     0x0
+
 // I2C
 #define I2C_SCL_PORT          0
 #define I2C_SCL_PIN           14
 #define I2C_SDA_PORT          0
 #define I2C_SDA_PIN           13
+
+// Battery Charger
+#define BQ25619_ADDR               0x6AU
 
 // UART
 #define UART_DEV              USART0

@@ -71,10 +71,10 @@ int main(void)
   sctpix_show();
 
   i2cBuff[0] = 0x02;  // Charge Current Limit Register
-  i2cBuff[1] = 0x8C;  // 240mA 
+  i2cBuff[1] = 0x99;  // 500mA (testing with 1000mAh battery)
   siic_write(BQ25619_ADDR, i2cBuff, 2);
 
-  sctpix_setPixel(NEOPIXEL_CH, 0, NEO_MAGENTA);
+  sctpix_setPixel(NEOPIXEL_CH, 0, NEO_BLUE);
   sctpix_setPixel(NEOPIXEL_CH, 1, NEO_GREEN);
   sctpix_show();
 
