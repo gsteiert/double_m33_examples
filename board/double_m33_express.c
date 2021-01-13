@@ -200,14 +200,6 @@ void board_init(void)
 
   siic_init(I2C1_BASE, 400000);
 
-  i2cBuff[0] = 0x02;  // Charge Current Limit Register
-  i2cBuff[1] = 0x85;  // 100mA (fairly safe)
-  siic_write(BQ25619_ADDR, i2cBuff, 2);
-
-  i2cBuff[0] = 0x03;  // Precharge & Termination
-  i2cBuff[1] = 0x11;  // Pre 20mA, Term 20mA
-  siic_write(BQ25619_ADDR, i2cBuff, 2);
-
   i2cBuff[0] = 0x00;  // Input Current Limit Register
   i2cBuff[1] = 0x4F;  // TS_IGNORE & 1500mA
   siic_write(BQ25619_ADDR, i2cBuff, 2);
