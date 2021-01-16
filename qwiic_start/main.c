@@ -38,6 +38,13 @@
 
 #define I2C_DATA_LENGTH            32U
 
+#define SSD1306_ADDR               0x3C
+#define SSD1306_CMD                0x00
+#define SSD1306_CMD_RPT            0x80
+#define SSD1306_DATA               0x40
+#define SSD1306_DATA_RPT           0xC0
+
+
 /* Blink pattern
  * - 250 ms  : button is not pressed
  * - 1000 ms : button is pressed (and hold)
@@ -53,6 +60,7 @@ int main(void)
 {
   uint8_t i2cBuff[I2C_DATA_LENGTH];
   board_init();
+  int i;
   
   uint32_t start_ms = 0;
   uint32_t pallet[8] = {
@@ -70,9 +78,126 @@ int main(void)
   sctpix_setPixel(NEOPIXEL_CH, 1, NEO_CYAN);
   sctpix_show();
 
-  i2cBuff[0] = 0x02;  // Charge Current Limit Register
-  i2cBuff[1] = 0x99;  // 500mA (testing with 1000mAh battery)
-  siic_write(BQ25619_ADDR, i2cBuff, 2);
+  i2cBuff[0] = SSD1306_CMD; 
+  i2cBuff[1] = 0xAE;  // Display off 
+  siic_write(SSD1306_ADDR, i2cBuff, 2);
+
+/*
+  i2cBuff[1] = 0xA1;  // Segment Re-map 
+  siic_write(SSD1306_ADDR, i2cBuff, 2);
+*/
+
+  i2cBuff[0] = SSD1306_CMD_RPT;
+  i2cBuff[1] = 0x81;  // Set Contrast
+  i2cBuff[2] = SSD1306_CMD;
+  i2cBuff[3] = 0x8F;  // value from Adafruit driver 
+  siic_write(SSD1306_ADDR, i2cBuff, 4);
+
+  i2cBuff[0] = SSD1306_CMD_RPT;
+  i2cBuff[1] = 0xDA;  // Set COM Pins
+  i2cBuff[2] = SSD1306_CMD;
+  i2cBuff[3] = 0x02;  // sequential 
+  siic_write(SSD1306_ADDR, i2cBuff, 4);
+
+  i2cBuff[0] = SSD1306_CMD_RPT;
+  i2cBuff[1] = 0x20;  // Address mode command
+  i2cBuff[2] = SSD1306_CMD;
+  i2cBuff[3] = 0x00;  // Horizontal address mode
+  siic_write(SSD1306_ADDR, i2cBuff, 4);
+
+  i2cBuff[0] = SSD1306_CMD_RPT;
+  i2cBuff[1] = 0x21;  // Column Address
+  i2cBuff[2] = SSD1306_CMD_RPT;
+  i2cBuff[3] = 0U;
+  i2cBuff[4] = SSD1306_CMD;
+  i2cBuff[5] = 127U;
+  siic_write(SSD1306_ADDR, i2cBuff, 6);
+
+  i2cBuff[0] = SSD1306_CMD_RPT;
+  i2cBuff[1] = 0x22;  // Page Address
+  i2cBuff[2] = SSD1306_CMD_RPT;
+  i2cBuff[3] = 0x00;
+  i2cBuff[4] = SSD1306_CMD;
+  i2cBuff[5] = 0x03;
+  siic_write(SSD1306_ADDR, i2cBuff, 6);
+
+  i2cBuff[0] = SSD1306_DATA;
+  i2cBuff[1] = 0x00;
+  for (i = 0; i < 512; i++) {
+    siic_write(SSD1306_ADDR, i2cBuff, 2);
+  }
+
+  i2cBuff[0] = SSD1306_CMD_RPT;
+  i2cBuff[1] = 0x8D;  // Charge Pump Command 
+  i2cBuff[2] = SSD1306_CMD_RPT;
+  i2cBuff[3] = 0x14;  // Charge Pump Enabled
+  i2cBuff[4] = SSD1306_CMD;
+  i2cBuff[5] = 0xAF;  // Display on
+  siic_write(SSD1306_ADDR, i2cBuff, 6);
+
+  i2cBuff[0] = SSD1306_CMD_RPT;
+  i2cBuff[1] = 0x21;  // Column Address
+  i2cBuff[2] = SSD1306_CMD_RPT;
+  i2cBuff[3] = 0U;
+  i2cBuff[4] = SSD1306_CMD;
+  i2cBuff[5] = 127U;
+  siic_write(SSD1306_ADDR, i2cBuff, 6);
+
+  i2cBuff[0] = SSD1306_CMD_RPT;
+  i2cBuff[1] = 0x22;  // Page Address
+  i2cBuff[2] = SSD1306_CMD_RPT;
+  i2cBuff[3] = 0U;
+  i2cBuff[4] = SSD1306_CMD;
+  i2cBuff[5] = 3U;
+  siic_write(SSD1306_ADDR, i2cBuff, 6);
+
+  i2cBuff[0] = SSD1306_DATA_RPT;
+  i2cBuff[1] = 0xFF;
+  i2cBuff[2] = SSD1306_DATA_RPT;
+  i2cBuff[3] = 0x02;
+  i2cBuff[4] = SSD1306_DATA_RPT;
+  i2cBuff[5] = 0x04;
+  i2cBuff[6] = SSD1306_DATA_RPT;
+  i2cBuff[7] = 0x08;
+  i2cBuff[8] = SSD1306_DATA_RPT;
+  i2cBuff[9] = 0x10;
+  i2cBuff[10] = SSD1306_DATA_RPT;
+  i2cBuff[11] = 0xF0;
+  i2cBuff[12] = SSD1306_DATA_RPT;
+  i2cBuff[13] = 0x10;
+  i2cBuff[14] = SSD1306_DATA_RPT;
+  i2cBuff[15] = 0x08;
+  i2cBuff[16] = SSD1306_DATA_RPT;
+  i2cBuff[17] = 0x04;
+  i2cBuff[18] = SSD1306_DATA;
+  i2cBuff[19] = 0x02;
+  for (i = 0; i < 15; i++) {
+    siic_write(SSD1306_ADDR, i2cBuff, 20);
+  }
+
+  i2cBuff[0] = SSD1306_DATA_RPT;
+  i2cBuff[1] = 0xFF;
+  i2cBuff[2] = SSD1306_DATA_RPT;
+  i2cBuff[3] = 0x81;
+  i2cBuff[4] = SSD1306_DATA_RPT;
+  i2cBuff[5] = 0x81;
+  i2cBuff[6] = SSD1306_DATA_RPT;
+  i2cBuff[7] = 0x81;
+  i2cBuff[8] = SSD1306_DATA_RPT;
+  i2cBuff[9] = 0x81;
+  i2cBuff[10] = SSD1306_DATA_RPT;
+  i2cBuff[11] = 0x3C;
+  i2cBuff[12] = SSD1306_DATA_RPT;
+  i2cBuff[13] = 0x81;
+  i2cBuff[14] = SSD1306_DATA_RPT;
+  i2cBuff[15] = 0x81;
+  i2cBuff[16] = SSD1306_DATA_RPT;
+  i2cBuff[17] = 0x81;
+  i2cBuff[18] = SSD1306_DATA;
+  i2cBuff[19] = 0x81;
+  for (i = 0; i < 15; i++) {
+    siic_write(SSD1306_ADDR, i2cBuff, 20);
+  }
 
   sctpix_setPixel(NEOPIXEL_CH, 0, NEO_BLUE);
   sctpix_setPixel(NEOPIXEL_CH, 1, NEO_GREEN);
