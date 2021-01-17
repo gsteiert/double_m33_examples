@@ -50,7 +50,10 @@ endif
 
 # Set all as default goal
 .DEFAULT_GOAL := all
-all: $(BUILD)/$(BOARD)-firmware.bin $(BUILD)/$(BOARD)-firmware.hex size
+all: $(BUILD)/$(BOARD)-firmware.bin \
+     $(BUILD)/$(BOARD)-firmware.hex \
+	 $(BUILD)/$(BOARD)-firmware.uf2 \
+	 size
 
 uf2: $(BUILD)/$(BOARD)-firmware.uf2
 
@@ -72,6 +75,7 @@ $(BUILD)/$(BOARD)-firmware.hex: $(BUILD)/$(BOARD)-firmware.elf
 	@$(OBJCOPY) -O ihex $^ $@
 
 UF2_FAMILY ?= 0x00
+PYTHON ?= python
 $(BUILD)/$(BOARD)-firmware.uf2: $(BUILD)/$(BOARD)-firmware.hex
 	@echo CREATE $@
 	$(PYTHON) $(TOP)/uf2/utils/uf2conv.py -f $(UF2_FAMILY) -c -o $@ $^

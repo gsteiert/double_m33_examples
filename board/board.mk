@@ -44,6 +44,10 @@ LIBS += $(MCU_DIR)/gcc/libpower_hardabi.a
 VENDOR = nxp
 CHIP_FAMILY = lpc_ip3511
 
+# For UF2 conversion
+UF2_FAMILY    = LPC55
+UF2_FAMILY_ID = 0x2abc77ec
+
 # For freeRTOS port source
 FREERTOS_PORT = ARM_CM33_NTZ/non_secure
 

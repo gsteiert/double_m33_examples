@@ -38,11 +38,11 @@
 #define WAIT_TIME                  10U
 
 #define I2C_DATA_LENGTH            32U
+#define QGPIO_ADDR                 0x38
 
 #define DISP_X          128
 #define DISP_Y          32
 
-//extern const uint8_t font_bmp[];
 
 /* Blink pattern
  * - 250 ms  : button is not pressed
@@ -57,8 +57,9 @@ enum  {
 
 int main(void)
 {
-//  uint8_t i2cBuff[I2C_DATA_LENGTH];
+  uint8_t i2cBuff[I2C_DATA_LENGTH];
   uint8_t dispBuff[(DISP_X * DISP_Y)/8];
+  uint8_t countStr[20];
   board_init();
   
   uint32_t start_ms = 0;
@@ -113,6 +114,15 @@ int main(void)
       start_ms = board_millis();
 
       board_led_write(count & 0x1);
+      
+      // Write the low byte of the count to the PCF8574
+      i2cBuff[0] = 0xFF & count;
+      siic_write(QGPIO_ADDR, i2cBuff, 1);
+
+      sprintf((char *)countStr, "   0x%08lX   ", count);
+      ssd1306_print(0, 32, countStr, 16);
+      ssd1306_update();
+
 //      sctpix_setPixel(NEOPIXEL_CH, 0, pallet[(count & 0x7U)]);
       sctpix_setPixel(NEOPIXEL_CH, 1, pallet[((count +4) & 0x7U)]);
       sctpix_show();
