@@ -126,3 +126,21 @@ void ssd1306_update(void) {
   }
 }
 
+void ssd1306_print(uint32_t page, uint32_t col, uint8_t *buffer, uint32_t length) {
+  uint32_t dispIndex = col + (page << 7); // add 128 to index for each page
+  uint32_t fontIndex;
+  while (length) {
+    if (*buffer < 0x20) {
+      fontIndex = 0;
+    } else {
+      fontIndex = 5* ((*buffer)-0x20);
+    }
+    if (dispIndex < 512) {
+      _disp_buf[dispIndex++] = 0x00;
+      memcpy(&_disp_buf[dispIndex], &font_bmp[fontIndex], 5);
+      dispIndex += 5;
+    }
+    buffer += 1;
+    length -= 1;
+  }
+}

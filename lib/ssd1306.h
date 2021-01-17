@@ -59,6 +59,15 @@ void ssd1306_init(uint32_t x, uint32_t y, uint8_t *buffer);
 */
 void ssd1306_update(void);
 
+/*!
+  @brief  Writes string to SSD1306 display
+  @param  page    Horizontal resolution  
+  @param  col     Vertical resolution  
+  @param  buffer  pointer to string buffer
+  @param  length  number of bytes to print
+*/
+void ssd1306_print(uint32_t page, uint32_t col, uint8_t *buffer, uint32_t length);
+
 #ifdef __cplusplus
  }
 #endif

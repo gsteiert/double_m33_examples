@@ -42,6 +42,8 @@
 #define DISP_X          128
 #define DISP_Y          32
 
+//extern const uint8_t font_bmp[];
+
 /* Blink pattern
  * - 250 ms  : button is not pressed
  * - 1000 ms : button is pressed (and hold)
@@ -80,6 +82,19 @@ int main(void)
   sctpix_setPixel(NEOPIXEL_CH, 0, NEO_BLUE);
   sctpix_setPixel(NEOPIXEL_CH, 1, NEO_GREEN);
   sctpix_show();
+
+  uint8_t testStr[96];
+  for (int i = 0; i<96; i++){
+    testStr[i] = i + 0x20;
+  }
+
+  ssd1306_print(0, 32, &testStr[0], 16);
+  ssd1306_print(1, 32, &testStr[16], 16);
+  ssd1306_print(2, 32, &testStr[32], 16);
+  ssd1306_print(3, 32, &testStr[48], 16);
+
+//  memcpy(dispBuff, font_bmp, 125);
+  ssd1306_update();
 
 
   while (1)
