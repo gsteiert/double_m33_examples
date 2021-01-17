@@ -91,8 +91,8 @@ int main(void)
 
   ssd1306_print(0, 32, &testStr[0], 16);
   ssd1306_print(1, 32, &testStr[16], 16);
-  ssd1306_print(2, 32, &testStr[32], 16);
-  ssd1306_print(3, 32, &testStr[48], 16);
+  ssd1306_print(2, 32, &testStr[48], 16);
+  ssd1306_print(3, 32, &testStr[80], 16);
 
 //  memcpy(dispBuff, font_bmp, 125);
   ssd1306_update();
