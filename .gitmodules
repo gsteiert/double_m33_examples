@@ -1,12 +1,12 @@
 [submodule "tinyusb"]
 	path = tinyusb
 	url = https://github.com/gsteiert/tinyusb
-[submodule "nxp"]
-	path = nxp
-	url = https://github.com/hathach/nxp_driver
 [submodule "uf2"]
 	path = uf2
 	url = https://github.com/microsoft/uf2
 [submodule "sct_neopixel"]
 	path = sct_neopixel
 	url = https://github.com/gsteiert/sct_neopixel
+[submodule "mcux-sdk"]
+	path = mcux-sdk
+	url = https://github.com/NXPmicro/mcux-sdk
